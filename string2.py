@@ -18,7 +18,7 @@
 def verbing(s):
   # +++your code here+++
   if len(s) >= 3:
-    if 'ing' in s[-3:]:
+    if s[-3:] == 'ing':
       s = s + 'ly'
     else:
       s = s + 'ing'
@@ -51,8 +51,11 @@ def not_bad(s):
 def front_back(a, b):
   # +++your code here+++
   def get_front_back(s):
-    s_front = s[:len(s)/2 + len(s) % 2]
-    s_back = s[s.find(s_front) + len(s_front):]
+    # s_front = s[:len(s)/2 + len(s) % 2]
+    # s_back = s[s.find(s_front) + len(s_front):]
+    index_split = len(s)/2 + len(s) % 2
+    s_front = s[:index_split]
+    s_back = s[index_split:]
     return s_front, s_back
   a_front, a_back = get_front_back(a)
   b_front, b_back = get_front_back(b)
