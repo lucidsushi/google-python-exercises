@@ -1,4 +1,3 @@
-# hello-world2
-test repository
+# hello-world
 
-Hello just here, now going!
+hello-world -> google python exercises holder
