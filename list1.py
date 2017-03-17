@@ -42,7 +42,10 @@ def front_x(words):
   xs = []
   other = []
   for w in words:
-    xs.append(w) if w.startswith('x') else other.append(w)
+    if w.startswith('x'):
+      xs.append(w) 
+    else:
+      other.append(w)
   return sorted(xs) + sorted(other)
 
 
