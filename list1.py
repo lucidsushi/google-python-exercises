@@ -39,7 +39,11 @@ def match_ends(words):
 def front_x(words):
   # +++your code here+++
   #words.sort(key=lambda x: not x.startswith('x'))
-  return
+  xs = []
+  other = []
+  for w in words:
+    xs.append(w) if w.startswith('x') else other.append(w)
+  return sorted(xs) + sorted(other)
 
 
 # C. sort_last
@@ -50,7 +54,7 @@ def front_x(words):
 # Hint: use a custom key= function to extract the last element form each tuple.
 def sort_last(tuples):
   # +++your code here+++
-  return
+  return sorted(tuples, key=lambda x: x[-1])
 
 
 # Simple provided test() function used in main() to print
