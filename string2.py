@@ -17,12 +17,12 @@
 # Return the resulting string.
 def verbing(s):
   # +++your code here+++
-  if len(s) >= 3:
-    if s[-3:] == 'ing':
-      s = s + 'ly'
-    else:
-      s = s + 'ing'
-  return s
+  #mchen - favour early returns to get edge cases out of the way and improve readability 
+  if len(s) < 3:
+    return s
+  if s.endswith('ing'):
+    return s + 'ly'
+  return s + 'ing'
 
 # E. not_bad
 # Given a string, find the first appearance of the
@@ -34,12 +34,19 @@ def verbing(s):
 # This dinner is good!
 def not_bad(s):
   # +++your code here+++
-  index_not = s.find('not')
-  index_bad = s.find('bad')
-  if -1 < index_not < index_bad:
-    not_to_bad = s[index_not:index_bad + len('bad')]
-    s = s.replace(not_to_bad, 'good', 1)
-  return s
+  #mchen - favour early returns to get edge cases out of the way and improve readability
+  # used index instead of find to cause error and return early
+  try:
+    index_not = s.index('not')
+    index_bad = s.index('bad')
+  except ValueError:
+    return s
+
+  if index_bad < index_not:
+    return s
+
+  index_end_of_bad = index_bad + len('bad')
+  return s[:index_not] + 'good' + s[index_end_of_bad:]
 
 # F. front_back
 # Consider dividing a string into two halves.
