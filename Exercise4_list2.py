@@ -14,15 +14,20 @@
 # modify the passed in list.
 def remove_adjacent(nums):
   # +++your code here+++
-  for i, num in enumerate(nums):
-    next = i + 1
-    while next < len(nums):
-      if num == nums[next]:
-        nums[next] = 'to_remove'
-        next += 1
-      else:
-        break
-  return [num for num in nums if num != 'to_remove']
+  # for i, num in enumerate(nums):
+  #   next = i + 1
+  #   while next < len(nums):
+  #     if num == nums[next]:
+  #       nums[next] = 'to_remove'
+  #       next += 1
+  #     else:
+  #       break
+  # return [num for num in nums if num != 'to_remove']
+  no_adj = []
+  for i in nums:
+    if len(no_adj) == 0 or i != no_adj[-1]:
+      no_adj.append(i)
+  return no_adj
 
 
 # E. Given two lists sorted in increasing order, create and return a merged
