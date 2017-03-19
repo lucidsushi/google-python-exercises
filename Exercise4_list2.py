@@ -34,19 +34,18 @@ def linear_merge(list1, list2):
   # the fastest sorts are O(n log(n)) which is slower than linear
   # https://www.ics.uci.edu/~pattis/ICS-33/lectures/complexitypython.txt
   #list1.extend(list2) return sorted(list1)
-  merged_list = list1
   index_counter = 0
-  for i in list2:
+  for i in list1:
     try:
-      while index_counter < len(list1+list2):
-        if i < merged_list[index_counter]:
-          merged_list.insert(index_counter, i)
+      while True:
+        if i < list2[index_counter]:
+          list2.insert(index_counter, i)
           break
         else:
           index_counter += 1
     except IndexError:
-      merged_list.append(i)
-  return merged_list
+      list2.append(i)
+  return list2
 
 #Below note is from google against unknown solution
 # Note: the solution above is kind of cute, but unforunately list.pop(0)
