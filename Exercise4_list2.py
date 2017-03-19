@@ -14,7 +14,7 @@
 # modify the passed in list.
 def remove_adjacent(nums):
   # +++your code here+++
-    for i, num in enumerate(nums):
+  for i, num in enumerate(nums):
     next = i + 1
     while next < len(nums):
       if num == nums[next]:
@@ -31,10 +31,24 @@ def remove_adjacent(nums):
 # pass of both lists.
 def linear_merge(list1, list2):
   # +++your code here+++
-  #not sure this is "liner" time
-  list1.extend(list2)
-  return sorted(list1)
+  # the fastest sorts are O(n log(n)) which is slower than linear
+  # https://www.ics.uci.edu/~pattis/ICS-33/lectures/complexitypython.txt
+  #list1.extend(list2) return sorted(list1)
+  merged_list = list1
+  index_counter = 0
+  for i in list2:
+    try:
+      while index_counter < len(list1+list2):
+        if i < merged_list[index_counter]:
+          merged_list.insert(index_counter, i)
+          break
+        else:
+          index_counter += 1
+    except IndexError:
+      merged_list.append(i)
+  return merged_list
 
+#Below note is from google against unknown solution
 # Note: the solution above is kind of cute, but unforunately list.pop(0)
 # is not constant time with the standard python list implementation, so
 # the above is not strictly linear time.
