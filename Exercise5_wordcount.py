@@ -38,6 +38,7 @@ print_words() and print_top().
 """
 
 import sys
+import string
 
 # +++your code here+++
 # Define print_words(filename) and print_top(filename) functions.
@@ -45,21 +46,30 @@ import sys
 # and builds and returns a word/count dict for it.
 # Then print_words() and print_top() can just call the utility function.
 def print_words(filename):
+  word_counts = get_word_counts(filename)
+  for key in sorted(word_counts):
+    print key, word_counts[key]
+  return word_counts
+
+def print_top(filename):
+  word_counts = get_word_counts(filename)
+  for word in sorted(word_counts,
+                     key=lambda k: word_counts[k], reverse=True)[:20]:
+    print word, word_counts[word]
+
+def get_word_counts(filename):
   word_counts = {}
   f = open(filename, 'rU')
   for line in f:
     words = line.split()
     for word in words:
       word = word.lower()
+      word = word.strip(string.punctuation)
       if not word_counts.has_key(word):
-        word_counts[word] = 0
+        word_counts[word] = 1
       else:
         word_counts[word] += 1
-
-  for key in sorted(word_counts):
-    print key, word_counts[key]
   return word_counts
-
 ###
 
 # This basic command line argument parsing code is provided and
