@@ -67,10 +67,7 @@ def get_word_counts(filename):
     for w in words:
       w = w.lower()
       w = w.strip(string.punctuation)
-      if not word_counts.has_key(w):
-        word_counts[w] = 1
-      else:
-        word_counts[w] += 1
+      word_counts[w] = word_counts.get(w, 0) + 1
   return word_counts
 ###
 
