@@ -46,29 +46,31 @@ import string
 # and builds and returns a word/count dict for it.
 # Then print_words() and print_top() can just call the utility function.
 def print_words(filename):
+  '''print words/word_count in filename'''
   word_counts = get_word_counts(filename)
-  for key in sorted(word_counts):
-    print key, word_counts[key]
-  return word_counts
+  for word, count in sorted(word_counts.items()):
+    print word, count
 
 def print_top(filename):
+  '''print topmost x common words/word_count in filename'''
+  topmost = 20
   word_counts = get_word_counts(filename)
-  for word in sorted(word_counts,
-                     key=lambda k: word_counts[k], reverse=True)[:20]:
-    print word, word_counts[word]
+  for word, count in sorted(word_counts.items(),
+                     key=lambda x: x[1], reverse=True)[:topmost]:
+    print word, count
 
 def get_word_counts(filename):
   word_counts = {}
   f = open(filename, 'rU')
   for line in f:
     words = line.split()
-    for word in words:
-      word = word.lower()
-      word = word.strip(string.punctuation)
-      if not word_counts.has_key(word):
-        word_counts[word] = 1
+    for w in words:
+      w = w.lower()
+      w = w.strip(string.punctuation)
+      if not word_counts.has_key(w):
+        word_counts[w] = 1
       else:
-        word_counts[word] += 1
+        word_counts[w] += 1
   return word_counts
 ###
 
