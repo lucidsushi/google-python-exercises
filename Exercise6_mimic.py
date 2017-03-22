@@ -51,17 +51,13 @@ def mimic_dict(filename):
   """
   with open(filename, 'rU') as f:
     text = f.read().split()
-    mimics = {'': [text[0]]}
-    for index, word in enumerate(text):
-      try:
-        next_word = text[index+1]
-      except IndexError:
-        break
-      if word not in mimics:
-        mimics[word] = [next_word]
-      else:
-        mimics[word].append(next_word)
+    mimics = {}
+    first_word = ''
+    for next_word in text:
+      mimics[first_word] = mimics.get(first_word, []) + [next_word]
+      first_word = next_word
   return mimics
+
 
 def print_mimic(mimic_dict, word):
   """Given mimic dict and start word, prints 200 random words.
@@ -71,10 +67,10 @@ def print_mimic(mimic_dict, word):
   linebreak_count =  1
 
   for i in range(200):
-    if len(mimic_dict.get(word, [])):
-      word = random.choice(mimic_dict[word])
-    else:
-      word = random.choice(mimic_dict[''])
+    words = mimic_dict.get(word)
+    if not words:
+      words = mimic_dict.get('')
+    word = random.choice(words)
     output.append(' ')
     output.append(word)
 
