@@ -68,6 +68,7 @@ def get_word_counts(filename):
       w = w.lower()
       w = w.strip(string.punctuation)
       word_counts[w] = word_counts.get(w, 0) + 1
+  f.close()
   return word_counts
 ###
 
