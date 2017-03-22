@@ -46,35 +46,44 @@ import sys
 
 
 def mimic_dict(filename):
-  """Returns mimic dict mapping each word to list of words which follow it."""
-  # +++your code here+++
+  """Returns mimic dict mapping each word to list of words which follow it.
+  Where first key word is ''
+  """
   with open(filename, 'rU') as f:
     text = f.read().split()
     mimics = {'': [text[0]]}
     for index, word in enumerate(text):
       try:
-        if word not in mimics:
-          mimics[word] = [text[index+1]]
-        else:
-          mimics[word].append(text[index+1])
+        next_word = text[index+1]
       except IndexError:
         break
+      if word not in mimics:
+        mimics[word] = [next_word]
+      else:
+        mimics[word].append(next_word)
   return mimics
 
-
 def print_mimic(mimic_dict, word):
-  """Given mimic dict and start word, prints 200 random words."""
-  # +++your code here+++
+  """Given mimic dict and start word, prints 200 random words.
+  Where it defaults back to key word '' when it hits a word not in mimic_dict
+  """
   output = []
+  linebreak_count =  1
+
   for i in range(200):
     if len(mimic_dict.get(word, [])):
       word = random.choice(mimic_dict[word])
-      output.append(word)
     else:
       word = random.choice(mimic_dict[''])
-      output.append(word)
-  print mimic_dict
-  print ' '.join(output)
+    output.append(' ')
+    output.append(word)
+
+    if len(''.join(output)) >= linebreak_count * 70:
+      output.append('\n')
+      linebreak_count += 1
+
+  print ''.join(output)
+
 
 # Provided main(), calls mimic_dict() and mimic()
 def main():
