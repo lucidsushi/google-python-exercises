@@ -48,14 +48,18 @@ import sys
 def mimic_dict(filename):
   """Returns mimic dict mapping each word to list of words which follow it.
   Where first key word is ''
+
+  #another alternative
+  mimics = defaultdict(list)
+  mimics[current_word].append(next_word)
   """
   with open(filename, 'rU') as f:
     text = f.read().split()
     mimics = {}
-    first_word = ''
+    current_word = ''
     for next_word in text:
-      mimics.setdefault(first_word, []).append(next_word)
-      first_word = next_word
+      mimics.setdefault(current_word, []).append(next_word)
+      current_word = next_word
   return mimics
 
 
