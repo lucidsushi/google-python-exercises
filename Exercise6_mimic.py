@@ -54,7 +54,7 @@ def mimic_dict(filename):
     mimics = {}
     first_word = ''
     for next_word in text:
-      mimics[first_word] = mimics.get(first_word, []) + [next_word]
+      mimics.setdefault(first_word, []).append(next_word)
       first_word = next_word
   return mimics
 
@@ -63,23 +63,20 @@ def print_mimic(mimic_dict, word):
   """Given mimic dict and start word, prints 200 random words.
   Where it defaults back to key word '' when it hits a word not in mimic_dict
   """
-  output = []
-  linebreak_count =  1
+  column_width = 70
+  current_length = 0
 
   for i in range(200):
     words = mimic_dict.get(word)
     if not words:
-      words = mimic_dict.get('')
+      words = mimic_dict['']
     word = random.choice(words)
-    output.append(' ')
-    output.append(word)
-
-    if len(''.join(output)) >= linebreak_count * 70:
-      output.append('\n')
-      linebreak_count += 1
-
-  print ''.join(output)
-
+    if current_length + len(word) > column_width:
+      current_length = 0
+      print '\n',
+    current_length += len(word) + 1
+    print word,
+    
 
 # Provided main(), calls mimic_dict() and mimic()
 def main():
