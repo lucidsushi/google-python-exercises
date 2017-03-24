@@ -6,6 +6,7 @@
 # Google's Python Class
 # http://code.google.com/edu/languages/google-python-class/
 
+import os
 import sys
 import re
 
@@ -41,8 +42,25 @@ def extract_names(filename):
   ['2006', 'Aaliyah 91', Aaron 57', 'Abagail 895', ' ...]
   """
   # +++your code here+++
-  print filename
-  return
+  year_name_rank = []
+  with open (filename, 'rU') as f:
+    text = f.read()
+
+  #                Popularity in 1990
+  matcy_year_re = 'Popularity\sin\s(\d+)'
+  match_year = re.search(matcy_year_re, text)
+  if match_year:
+    year = match_year.group(1)
+    year_name_rank.append(year)
+
+  #                      <td>1</td><td>Michael</td><td>Jessica</td>
+  match_rank_names_re = '<td>(\d+)<\/td><td>(\w+)<\/td><td>(\w+)<\/td>'
+  match_rank_names = re.findall(match_rank_names_re, text, re.MULTILINE)
+  if match_rank_names:
+    for rank, name_boy, name_girl in match_rank_names:
+      year_name_rank.append('{} {}'.format(name_boy, rank))
+      year_name_rank.append('{} {}'.format(name_girl, rank))
+  return sorted(year_name_rank)
 
 
 def main():
@@ -62,10 +80,15 @@ def main():
     del args[0]
 
   # +++your code here+++
-  filename = args[0]
-  extract_names(filename)
   # For each filename, get the names, then either print the text output
   # or write it to a summary file
-  
+  filename = args[0]
+  if summary:
+    extract_names_list = extract_names(filename)
+    with open(os.path.join(sys.path[0], 'summary.txt'), 'a+') as f:
+      f.write(str(extract_names_list))
+  else:
+    print extract_names(filename)
+
 if __name__ == '__main__':
   main()
