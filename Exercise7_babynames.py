@@ -42,10 +42,9 @@ def extract_names(filename):
   ['2006', 'Aaliyah 91', Aaron 57', 'Abagail 895', ' ...]
   """
   # +++your code here+++
-  year_name_rank = []
   with open (filename, 'rU') as f:
     text = f.read()
-
+    year_name_rank = []
   #                Popularity in 1990
   matcy_year_re = 'Popularity\sin\s(\d+)'
   match_year = re.search(matcy_year_re, text)
