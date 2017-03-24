@@ -41,6 +41,7 @@ def extract_names(filename):
   ['2006', 'Aaliyah 91', Aaron 57', 'Abagail 895', ' ...]
   """
   # +++your code here+++
+  print filename
   return
 
 
@@ -61,6 +62,8 @@ def main():
     del args[0]
 
   # +++your code here+++
+  filename = args[0]
+  extract_names(filename)
   # For each filename, get the names, then either print the text output
   # or write it to a summary file
   
