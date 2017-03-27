@@ -13,31 +13,48 @@ import shutil
 import commands
 import subprocess
 
+
 """Copy Special exercise
 """
-
 # +++your code here+++
 # Write functions and modify main() to call them
-
-# get_special_paths(dir) -- returns a list of the absolute paths of the special
-  #files in the given directory
-
-# copy_to(paths, dir) given a list of paths, copies those files into the given
-  #directory
-
-# zip_to(paths, zippath) given a list of paths, zip those files up into the
-  #given zipfile
-def get_special_paths(dir):
+def get_special_paths(directory):
+  '''returns a list of the absolute paths of the special files in the given
+  directory
+  '''
   special_paths = []
-  filenames = os.listdir(dir)
+  filenames = os.listdir(directory)
+  _dir = os.path.realpath(directory)
   for filename in filenames:
     #                 word?__word__.ext
     special_path_re = r'\w*__\w+__\.\w+'
     special_path_re_match = re.search(special_path_re, filename)
     if special_path_re_match:
-      special_paths.append(os.path.abspath(special_path_re_match.group()))
+      special_paths.append(os.path.join(_dir, special_path_re_match.group()))
   return special_paths
 
+
+def copy_to(paths, todir):
+  '''given a list of paths, copies those files into the given directory'''
+  for path in paths:
+    try:
+      os.mkdir(todir)
+    except WindowsError:
+      shutil.copy(path, todir)
+
+
+def zip_to(paths, zippath):
+  '''given a list of paths, zip those files up into the given zipfile'''
+  if os.name == 'posix':
+    cmd =  ['zip', '-j', zippath]
+    cmd.extend(paths)
+    subprocess.Popen(cmd)
+  elif os.name == 'nt':
+    cmd = ["C:\Program Files\WinRAR\WinRAR.exe", "a", "%s" % tozip]
+    paths = ["%s" % s for s in paths]
+    cmd.extend(paths)
+    print "Command I'm going to do %s" % cmd
+    subprocess.Popen(cmd)
 
 
 def main():
@@ -70,26 +87,14 @@ def main():
 
   # +++your code here+++
   # Call your functions
-  for filepath in args:
-    special_paths = get_special_paths(filepath)
-
+  for directory in args:
+    special_paths = get_special_paths(directory)
     if todir:
-      for path in special_paths:
-        try:
-          os.mkdir(todir)
-        except WindowsError:
-          shutil.copy(path, todir)
-
+      copy_to(paths, todir)
     elif tozip:
-      special_paths = ["%s" % s for s in special_paths]
-      cmd = ["C:\Program Files\WinRAR\WinRAR.exe", "a", "%s" % tozip]
-      cmd.extend(special_paths)
-      print "Command I'm going to do %s" % cmd
-      #(status, output) = commands.getstatusoutput(cmd)
-      subprocess.Popen(cmd)
-
+      zip_to(special_paths, tozip)
     else:
       print special_paths
-  
+
 if __name__ == "__main__":
   main()
