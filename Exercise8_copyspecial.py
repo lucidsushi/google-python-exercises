@@ -11,12 +11,32 @@ import re
 import os
 import shutil
 import commands
+import subprocess
 
 """Copy Special exercise
 """
 
 # +++your code here+++
 # Write functions and modify main() to call them
+
+# get_special_paths(dir) -- returns a list of the absolute paths of the special
+  #files in the given directory
+
+# copy_to(paths, dir) given a list of paths, copies those files into the given
+  #directory
+
+# zip_to(paths, zippath) given a list of paths, zip those files up into the
+  #given zipfile
+def get_special_paths(dir):
+  special_paths = []
+  filenames = os.listdir(dir)
+  for filename in filenames:
+    #                 word?__word__.ext
+    special_path_re = r'\w*__\w+__\.\w+'
+    special_path_re_match = re.search(special_path_re, filename)
+    if special_path_re_match:
+      special_paths.append(os.path.abspath(special_path_re_match.group()))
+  return special_paths
 
 
 
@@ -50,6 +70,24 @@ def main():
 
   # +++your code here+++
   # Call your functions
+  for filepath in args:
+    special_paths = get_special_paths(filepath)
+
+    if todir:
+      for path in special_paths:
+        try:
+          os.mkdir(todir)
+        except WindowsError:
+          shutil.copy(path, todir)
+
+    elif tozip:
+      cmd = ["C:\Program Files\WinRAR\WinRAR.exe", "a", "%s" % tozip, "%s" % ' '.join(special_paths)]
+      print "Command I'm going to do %s" % cmd
+      #(status, output) = commands.getstatusoutput(cmd)
+      subprocess.Popen(cmd)
+
+    else:
+      print special_paths
   
 if __name__ == "__main__":
   main()
