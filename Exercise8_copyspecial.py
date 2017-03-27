@@ -48,7 +48,7 @@ def zip_to(paths, zippath):
   if os.name == 'posix':
     cmd =  ['zip', '-j', zippath]
   elif os.name == 'nt':
-    cmd = ["C:\Program Files\WinRAR\WinRAR.exe", "a", "%s" % zippath]
+    cmd = ["C:\Program Files\WinRAR\WinRAR.exe", "a", zippath]
   else:
     return
   cmd.extend(paths)
