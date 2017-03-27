@@ -25,12 +25,12 @@ def get_special_paths(directory):
   special_paths = []
   filenames = os.listdir(directory)
   _dir = os.path.realpath(directory)
+  #                   __word__
+  special_path_re = r'__\w+__'
   for filename in filenames:
-    #                 word?__word__.ext
-    special_path_re = r'\w*__\w+__\.\w+'
     special_path_re_match = re.search(special_path_re, filename)
     if special_path_re_match:
-      special_paths.append(os.path.join(_dir, special_path_re_match.group()))
+      special_paths.append(os.path.join(_dir, filename))
   return special_paths
 
 
@@ -39,7 +39,7 @@ def copy_to(paths, todir):
   for path in paths:
     try:
       os.mkdir(todir)
-    except WindowsError:
+    except OSError:
       shutil.copy(path, todir)
 
 
@@ -47,14 +47,14 @@ def zip_to(paths, zippath):
   '''given a list of paths, zip those files up into the given zipfile'''
   if os.name == 'posix':
     cmd =  ['zip', '-j', zippath]
-    cmd.extend(paths)
-    subprocess.Popen(cmd)
   elif os.name == 'nt':
-    cmd = ["C:\Program Files\WinRAR\WinRAR.exe", "a", "%s" % tozip]
+    cmd = ["C:\Program Files\WinRAR\WinRAR.exe", "a", "%s" % zippath]
     paths = ["%s" % s for s in paths]
-    cmd.extend(paths)
-    print "Command I'm going to do %s" % cmd
-    subprocess.Popen(cmd)
+  else:
+    return
+  cmd.extend(paths)
+  print "Command I'm going to do %s" % ' '.join(cmd)
+  subprocess.Popen(cmd)
 
 
 def main():
@@ -90,7 +90,7 @@ def main():
   for directory in args:
     special_paths = get_special_paths(directory)
     if todir:
-      copy_to(paths, todir)
+      copy_to(special_paths, todir)
     elif tozip:
       zip_to(special_paths, tozip)
     else:
