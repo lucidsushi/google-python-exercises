@@ -81,7 +81,9 @@ def main():
           shutil.copy(path, todir)
 
     elif tozip:
-      cmd = ["C:\Program Files\WinRAR\WinRAR.exe", "a", "%s" % tozip, "%s" % ' '.join(special_paths)]
+      special_paths = ["%s" % s for s in special_paths]
+      cmd = ["C:\Program Files\WinRAR\WinRAR.exe", "a", "%s" % tozip]
+      cmd.extend(special_paths)
       print "Command I'm going to do %s" % cmd
       #(status, output) = commands.getstatusoutput(cmd)
       subprocess.Popen(cmd)
