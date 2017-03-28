@@ -24,21 +24,32 @@ def read_urls(filename):
   """Returns a list of the puzzle urls from the given log file,
   extracting the hostname from the filename itself.
   Screens out duplicate urls and returns the urls sorted into
-  increasing order."""
-  # +++your code here+++
+  increasing order. (If url has the pattern "-wordchars-wordchars.jpg" then
+  it should be sorted with the "second" wordchars)"""
+  #GET /edu/languages/google-python-class/images/puzzle/p-biai-bacj.jpg HTTP
   #if ufile.info().gettype() == 'text/plain'
   #if ufile.info().gettype() == 'text/html':
+
+  def sort_multi_word(full_url):
+    '''match multi-worded image of a-b-c.jpg using "c" '''
+    #                          words?-words-(words).jpg
+    multi_w_match = re.search('\w*-\w+-(\w+)\.jpg', os.path.basename(full_url))
+    if multi_w_match:
+      return multi_w_match.group(1)
+    else:
+      return full_url
+
   result_urls = []
   ufile = urllib.urlopen(filename)
   text = ufile.read()
-  #                            GET /foo?/puzzle/bar? HTTP
+  #                            GET (non-whitepuzzlenon-white) HTTP
   url_re_matches = re.findall('GET\s(\S*puzzle\S*)\sHTTP', text)
   for url in url_re_matches:
     full_url = urlparse.urljoin('http://code.google.com', url)
     if full_url not in result_urls:
       result_urls.append(full_url)
-  return sorted(result_urls)
-  
+  return sorted(result_urls, key=sort_multi_word)
+
 
 def download_images(img_urls, dest_dir):
   """Given the urls already in the correct order, downloads
@@ -47,18 +58,33 @@ def download_images(img_urls, dest_dir):
   Creates an index.html in the directory
   with an img tag to show each local image file.
   Creates the directory if necessary.
+  index.html looks like:
+  # <html><body>
+  # <img src="img0"><img src="img1">...
+  # </body></html>
   """
+  img_htmls = []
+  index_html = ''
   try:
     os.mkdir(dest_dir)
   except OSError:
     pass
-
   for index, url in enumerate(img_urls):
-    print "Retrieving..."
-    urllib.urlretrieve(url, os.path.join(dest_dir, 'img%s.jpg' % index))
+    img_name = 'img%s' % index
+    img_dest = os.path.join(dest_dir, img_name)
+    img_htmls.append('<img src="%s">' % img_name)
+    if not os.path.exists(img_dest):
+      print "Retrieving... %s" % url
+      urllib.urlretrieve(url, img_dest)
 
-  # +++your code here+++
-  
+  with open(os.path.join(dest_dir, 'index.html'), 'a+') as f:
+    index_html ='''
+    <html><body>
+    %s
+    </body></html>''' % ''.join(img_htmls)
+
+    f.write(index_html)
+
 
 def main():
   args = sys.argv[1:]
