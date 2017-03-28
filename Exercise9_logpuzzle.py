@@ -10,6 +10,7 @@ import os
 import re
 import sys
 import urllib
+import urlparse
 
 """Logpuzzle exercise
 Given an apache logfile, find the puzzle urls and download the images.
@@ -25,6 +26,18 @@ def read_urls(filename):
   Screens out duplicate urls and returns the urls sorted into
   increasing order."""
   # +++your code here+++
+  #if ufile.info().gettype() == 'text/plain'
+  #if ufile.info().gettype() == 'text/html':
+  result_urls = []
+  ufile = urllib.urlopen(filename)
+  text = ufile.read()
+  #                            GET /foo?/puzzle/bar? HTTP
+  url_re_matches = re.findall('GET\s(\S*puzzle\S*)\sHTTP', text)
+  for url in url_re_matches:
+    full_url = urlparse.urljoin('http://code.google.com', url)
+    if full_url not in result_urls:
+      result_urls.append(full_url)
+  return sorted(result_urls)
   
 
 def download_images(img_urls, dest_dir):
@@ -35,6 +48,15 @@ def download_images(img_urls, dest_dir):
   with an img tag to show each local image file.
   Creates the directory if necessary.
   """
+  try:
+    os.mkdir(dest_dir)
+  except OSError:
+    pass
+
+  for index, url in enumerate(img_urls):
+    print "Retrieving..."
+    urllib.urlretrieve(url, os.path.join(dest_dir, 'img%s.jpg' % index))
+
   # +++your code here+++
   
 
