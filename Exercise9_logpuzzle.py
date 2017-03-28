@@ -39,15 +39,14 @@ def read_urls(filename):
     else:
       return full_url
 
-  result_urls = []
+  result_urls = set()
   ufile = urllib.urlopen(filename)
   text = ufile.read()
   #                            GET (non-whitepuzzlenon-white) HTTP
   url_re_matches = re.findall('GET\s(\S*puzzle\S*)\sHTTP', text)
   for url in url_re_matches:
     full_url = urlparse.urljoin('http://code.google.com', url)
-    if full_url not in result_urls:
-      result_urls.append(full_url)
+    result_urls.add(full_url)
   return sorted(result_urls, key=sort_multi_word)
 
 
@@ -64,7 +63,6 @@ def download_images(img_urls, dest_dir):
   # </body></html>
   """
   img_htmls = []
-  index_html = ''
   try:
     os.mkdir(dest_dir)
   except OSError:
