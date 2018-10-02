@@ -14,21 +14,21 @@ def main():
 
     for polygon in polygons:
         polygon_context = get_polygon_context(polygon)
-        print json.dumps(context_to_geojson(polygon_context))
+        print(json.dumps(get_geojson(polygon_context)))
 
 
 def get_polygon_context(polygon):
-    """ store polygon as {"polygons": {["coordinates"], "value"}}
+    """ store polygon as {"value": val, "coordinates": []}
     """
-
     return {
         "value": polygon[-1],
         "coordinates": polygon[:-1]
     }
 
 
-def context_to_geojson(polygon_context):
-
+def get_geojson(polygon_context):
+    """ get geojson format from polygon_context
+    """
     return {
         "type": "Feature",
         "geometry": {
